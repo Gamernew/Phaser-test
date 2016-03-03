@@ -17,6 +17,9 @@ var platforms;
 var cursors;
 var stars;
 
+var score = 0;
+var scoreText;
+
 function create() {
   //  We're going to be using physics, so enable the Arcade Physics system
   game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -60,9 +63,9 @@ function create() {
   stars.enableBody = true;
 
   //  Here we'll create 12 of them evenly spaced apart
-  for (var i = 0; i < 500; i++) {
+  for (var i = 0; i < 10; i++) {
     //  Create a star inside of the 'stars' group
-    var star = stars.create(i * 1, 0, 'star');
+    var star = stars.create(i * 70, 0, 'star');
 
     //  Let gravity do its thing
     star.body.gravity.y = 300;
@@ -70,6 +73,8 @@ function create() {
     //  This just gives each star a slightly random bounce value
     star.body.bounce.y = 0.7 + Math.random() * 0.2;
   }
+  // The score
+  scoreText = game.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#000'});
 
   //  Our controls.
   cursors = game.input.keyboard.createCursorKeys();
@@ -112,4 +117,8 @@ function update() {
 
     // Removes the star from the screen
     star.kill();
+
+    score += 10;
+    scoreText.text = 'Score: ' + score;
+
   }
