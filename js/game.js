@@ -6,16 +6,18 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
 
 function preload() {
 
-  game.load.image('sky', 'assets/sky.png')
-  game.load.image('ground', 'assets/platform.png')
-  game.load.image('star', 'assets/star.png')
-  game.load.spritesheet('dude', 'assets/dude.png', 32, 48)
+  game.load.image('sky', 'assets/sky.png');
+  game.load.image('ground', 'assets/platform.png');
+  game.load.image('star', 'assets/star.png');
+  game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+  game.load.image('spike', 'assets/spike.png');
 
 }
 var player;
 var platforms;
 var cursors;
 var stars;
+var spikes;
 
 var score = 0;
 var scoreText;
@@ -41,6 +43,11 @@ function create() {
   ledge = platforms.create(-150, 250, 'ground');
   ledge.body.immovable = true;
 
+  // add Spikes
+  spikes = game.add.sprite(100, 478, 'spike');
+  game.physics.enable(spikes, Phaser.Physics.ARCADE);
+  spikes.body.immovable = true;
+
   // The player and its settings
   player = game.add.sprite(32, game.world.height - 150, 'dude');
 
@@ -59,11 +66,10 @@ function create() {
 
 
   stars = game.add.group();
-
   stars.enableBody = true;
 
   //  Here we'll create 12 of them evenly spaced apart
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i < 12; i++) {
     //  Create a star inside of the 'stars' group
     var star = stars.create(i * 70, 0, 'star');
 
@@ -73,6 +79,8 @@ function create() {
     //  This just gives each star a slightly random bounce value
     star.body.bounce.y = 0.7 + Math.random() * 0.2;
   }
+
+
   // The score
   scoreText = game.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#000'});
 
@@ -85,6 +93,8 @@ function update() {
   game.physics.arcade.collide(player, platforms);
   game.physics.arcade.collide(stars, platforms);
   game.physics.arcade.overlap(player, stars, collectStar, null, this);
+  game.physics.arcade.collide(player, spikes, spikesKill);
+
 
 
 
@@ -121,4 +131,9 @@ function update() {
     score += 10;
     scoreText.text = 'Score: ' + score;
 
+  }
+
+  function spikesKill (player, spikes) {
+
+    player.kill();
   }
