@@ -1,1 +1,1 @@
-It is just a repository for test the framework phaser 
+This is just a test repository for the framework phaser 
